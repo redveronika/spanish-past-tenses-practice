@@ -213,6 +213,31 @@
       padding: 10px;
     }
 
+    .mode-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+      color: #1e293b;
+      font-size: 15px;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 10px;
+      flex-wrap: wrap;
+    }
+
+    .mode-select {
+      border: 1px solid #94a3b8;
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 15px;
+      color: #1e293b;
+      background: white;
+      min-width: 210px;
+    }
+
     .good { color: #14532d; background: #dcfce7; }
     .bad { color: #7f1d1d; background: #fee2e2; }
 
@@ -313,6 +338,14 @@
         <div id="feedback" class="feedback"></div>
       </div>
 
+      <div class="mode-row">
+        <label for="gameMode">Режим:</label>
+        <select id="gameMode" class="mode-select">
+          <option value="tenses">Тренажёр времен</option>
+          <option value="vocab">Изучение новых слов</option>
+        </select>
+      </div>
+
       <div class="mode-toggle">
         <input type="checkbox" id="oralMode" />
         <label for="oralMode">Режим «Устный тест» (без объяснений)</label>
@@ -341,7 +374,7 @@
   </main>
 
   <script>
-    const questions = [
+    const tenseQuestions = [
       { prompt: 'Ayer, yo ____ (visitar) a mis padres después del trabajo.', options: ['visité', 'he visitado', 'visitaba'], correct: 0, tense: 'Pretérito Indefinido', explanation: 'Ayer — конкретный момент в прошлом, действие завершено.' },
       { prompt: 'Anoche, Pedro ____ (comprar) pan para la cena.', options: ['compró', 'compraba', 'ha comprado'], correct: 0, tense: 'Pretérito Indefinido', explanation: 'Anoche указывает на конкретное действие в конкретный вечер.' },
       { prompt: 'La semana pasada, ellos ____ (viajar) a Sevilla.', options: ['viajaron', 'han viajado', 'viajaban'], correct: 0, tense: 'Pretérito Indefinido', explanation: 'Период «la semana pasada» — завершённое событие.' },
@@ -357,7 +390,6 @@
       { prompt: 'A las nueve, Miguel ____ (llegar) demasiado tarde.', options: ['llegó', 'llegaba', 'ha llegado'], correct: 0, tense: 'Pretérito Indefinido', explanation: 'Событие указано во времени «a las nueve».' },
       { prompt: 'Anoche, yo ____ (leer) el capítulo final.', options: ['leí', 'he leído', 'leía'], correct: 0, tense: 'Pretérito Indefinido', explanation: 'Конкретный вечер, разовое действие.' },
       { prompt: 'La directora ____ que hoy no había clases.', options: ['anunció', 'había anunciado', 'anunciaba'], correct: 0, tense: 'Pretérito Indefinido', explanation: 'Конкретное сообщение в прошлом.' },
-
       { prompt: 'Cuando era niño, yo ____ (leer) un libro cada noche.', options: ['leía', 'leí', 'he leído'], correct: 0, tense: 'Pretérito Imperfecto', explanation: 'Повторяющееся действие в прошлом.' },
       { prompt: 'Cada domingo, mi familia ____ (ir) al parque.', options: ['íbamos', 'fuimos', 'hemos ido'], correct: 0, tense: 'Pretérito Imperfecto', explanation: 'Повторяющееся событие без конкретного завершения.' },
       { prompt: 'Cuando era pequeña, ella ____ (soñar) con ser médica.', options: ['soñaba', 'soñó', 'ha soñado'], correct: 0, tense: 'Pretérito Imperfecto', explanation: 'Фон и длительный процесс в прошлом.' },
@@ -369,12 +401,11 @@
       { prompt: 'Cuando era su cumpleaños, mis amigos ____ (venir) a su casa.', options: ['venían', 'vinieron', 'han venido'], correct: 0, tense: 'Pretérito Imperfecto', explanation: 'Повторяющийся сценарий в прошлом.' },
       { prompt: 'Cada tarde, yo ____ (correr) por el parque.', options: ['corría', 'corrí', 'he corrido'], correct: 0, tense: 'Pretérito Imperfecto', explanation: 'Действие по привычке в прошлом.' },
       { prompt: 'En esa época, nosotros ____ (tener) muy poco dinero.', options: ['teníamos', 'tuvimos', 'hemos tenido'], correct: 0, tense: 'Pretérito Imperfecto', explanation: 'Прошлое состояние/описание.' },
-      { prompt: 'A menudo, Carlos ____ (olvidar) su paraguas.', options: ['olvidaba', 'olvidó', 'ha olvidado'], correct: 0, tense: 'Pretérito Imperfecto', explanation: 'Повторяющееся действие с частотой «часто». ' },
+      { prompt: 'A menudo, Carlos ____ (olvidar) su paraguas.', options: ['olvidaba', 'olvidó', 'ha olvidado'], correct: 0, tense: 'Pretérito Imperfecto', explanation: 'Повторяющееся действие с частотой «часто».' },
       { prompt: 'Siempre que ____ (hacer) frío, se encendía la calefacción.', options: ['hacía', 'hizo', 'ha hecho'], correct: 0, tense: 'Pretérito Imperfecto', explanation: 'Условная конструкция, повторяемый фон.' },
       { prompt: 'Cuando era adolescente, ella ____ (dibujar) todos los días.', options: ['dibujaba', 'dibujó', 'ha dibujado'], correct: 0, tense: 'Pretérito Imperfecto', explanation: 'Привычка в прошлом.' },
       { prompt: 'Mientras mis padres ____ (trabajar), yo hacía la cena.', options: ['trabajaban', 'trabajaron', 'han trabajado'], correct: 0, tense: 'Pretérito Imperfecto', explanation: 'Одновременное действие в фоне.' },
       { prompt: 'Cuando estaba en la universidad, nosotros ____ (estudiar) juntos todas las tardes.', options: ['estudiábamos', 'estudiamos', 'hemos estudiado'], correct: 0, tense: 'Pretérito Imperfecto', explanation: 'Повторяющаяся учебная рутина.' },
-
       { prompt: 'Este año ya ____ (viajar) a tres países.', options: ['he viajado', 'viajé', 'viajaba'], correct: 0, tense: 'Pretérito Perfecto', explanation: 'Эпоха «этого года» и актуальность результата.' },
       { prompt: 'Esta semana ya ____ (leer) cinco capítulos.', options: ['he leído', 'leí', 'leía'], correct: 0, tense: 'Pretérito Perfecto', explanation: 'Активная актуальная неделя.' },
       { prompt: '¿Ya ____ (hacer) tu tarea?', options: ['has hecho', 'hiciste', 'hacías'], correct: 0, tense: 'Pretérito Perfecto', explanation: 'Вопрос о результате к настоящему моменту.' },
@@ -386,20 +417,19 @@
       { prompt: 'Todavía ____ (no entender) este punto.', options: ['no he entendido', 'no entendí', 'no entendía'], correct: 0, tense: 'Pretérito Perfecto', explanation: 'Негативная конструкция с актуальностью до настоящего.' },
       { prompt: 'En estos días, ella ____ (ir) más al gimnasio.', options: ['ha ido', 'fue', 'iba'], correct: 0, tense: 'Pretérito Perfecto', explanation: 'Период «эти дни» относится к настоящему.' },
       { prompt: 'No ____ (beber) alcohol en una semana todavía.', options: ['he bebido', 'bebí', 'bebía'], correct: 0, tense: 'Pretérito Perfecto', explanation: 'Отрицание опыта в рамке текущего периода.' },
-      { prompt: 'Esta primavera, nosotros ____ (empezar) un nuevo curso.', options: ['hemos empezado', 'empezamos', 'empezábamos'], correct: 0, tense: 'Pretérito Perfecto', explanation: 'Сейчас эта весна — ещё связанный с настоящим период.' },
-      { prompt: '¿Has ____ (ver) la nueva película de mañana?', options: ['visto', 'vieron', 'vi'], correct: 0, tense: 'Pretérito Perfecto', explanation: 'Сделай глагол в составе «has visto».' },
+      { prompt: 'Esta primavera, nosotros ____ (empezar) un nuevo curso.', options: ['hemos empezado', 'empezamos', 'empezábamos'], correct: 0, tense: 'Pretérito Perfecto', explanation: 'Эта весна всё ещё относится к настоящему периоду.' },
+      { prompt: '¿Has ____ (ver) la nueva película?', options: ['visto', 'vieron', 'vi'], correct: 0, tense: 'Pretérito Perfecto', explanation: 'В этом вопросе правильная форма: «has visto».' },
       { prompt: 'Últimamente, Marta ____ (decidir) aprender ruso.', options: ['ha decidido', 'decidió', 'decidía'], correct: 0, tense: 'Pretérito Perfecto', explanation: 'Новый факт на текущем этапе жизни.' },
       { prompt: 'Desde ayer, nosotros ____ (hacer) ejercicio tres veces.', options: ['hemos hecho', 'hicimos', 'hacíamos'], correct: 0, tense: 'Pretérito Perfecto', explanation: 'Период начинается в прошлом и продолжается к настоящему.' },
       { prompt: 'Esta semana yo ____ (leer) diez correos de trabajo.', options: ['he leído', 'leí', 'leía'], correct: 0, tense: 'Pretérito Perfecto', explanation: 'Кумулятивный результат в текущей неделе.' },
       { prompt: 'Mis hijos ____ (probar) muchas cosas nuevas este año.', options: ['han probado', 'probaron', 'probaban'], correct: 0, tense: 'Pretérito Perfecto', explanation: 'Актуальный результат за год.' },
-
       { prompt: 'Antes de que llegáramos, ella ____ (preparar) la cena.', options: ['había preparado', 'preparó', 'preparaba'], correct: 0, tense: 'Pretérito Pluscuamperfecto', explanation: 'Предшествующее событие по отношению к другому прошлому.' },
       { prompt: 'Cuando entré, ella ____ (comprar) ya su boleto.', options: ['había comprado', 'compró', 'compraba'], correct: 0, tense: 'Pretérito Pluscuamperfecto', explanation: 'Закупка произошла раньше входа.' },
-      { prompt: 'Cuando te vi, yo ____ (terminar) de vestirme.', options: ['había terminado', 'terminé', 'terminaba'], correct: 0, tense: 'Pretérito Pluscuamperfecto', explanation: 'Выполнение завершилось перед моментом «cuando te vi». ' },
+      { prompt: 'Cuando te vi, yo ____ (terminar) de vestirme.', options: ['había terminado', 'terminé', 'terminaba'], correct: 0, tense: 'Pretérito Pluscuamperfecto', explanation: 'Завершение состоялось до момента «cuando te vi». ' },
       { prompt: 'Ya ____ (leer) dos capítulos cuando la luz se fue.', options: ['había leído', 'leí', 'leía'], correct: 0, tense: 'Pretérito Pluscuamperfecto', explanation: 'Порядок действий: чтение до выключения света.' },
       { prompt: 'Antes de que me llamara, yo ____ (encender) la alarma.', options: ['había encendido', 'encendí', 'encendía'], correct: 0, tense: 'Pretérito Pluscuamperfecto', explanation: 'Предшествующее действие относительно звонка.' },
       { prompt: 'Ella ya ____ (recibir) la respuesta cuando leímos el correo.', options: ['había recibido', 'recibió', 'recibía'], correct: 0, tense: 'Pretérito Pluscuamperfecto', explanation: 'Подчинённое событие произошло раньше основного.' },
-      { prompt: 'Cuando llegó el director, nosotros ____ (preparar) el aula.', options: ['habíamos preparado', 'preparamos', 'preparábamos'], correct: 0, tense: 'Pretérito Pluscuamperfecto', explanation: 'Перед приходом директора подготовка уже была закончена.' },
+      { prompt: 'Cuando llegó el director, nosotros ____ (preparar) el aula.', options: ['habían preparado', 'preparamos', 'preparábamos'], correct: 0, tense: 'Pretérito Pluscuamperfecto', explanation: 'Перед приходом директора подготовка уже была закончена.' },
       { prompt: 'Antes de salir, ellos ____ (poner) la mesa.', options: ['habían puesto', 'pusieron', 'ponían'], correct: 0, tense: 'Pretérito Pluscuamperfecto', explanation: 'Предыдущий этап по отношению к действию «salir».' },
       { prompt: 'Cuando terminó la película, yo ____ (completar) el reporte.', options: ['había completado', 'completé', 'completaba'], correct: 0, tense: 'Pretérito Pluscuamperfecto', explanation: 'Действие отчёта произошло до завершения фильма.' },
       { prompt: 'Ya ____ (saber) la noticia cuando me escribiste.', options: ['había sabido', 'supe', 'sabía'], correct: 0, tense: 'Pretérito Pluscuamperfecto', explanation: 'Знание было уже до времени письма.' },
@@ -409,7 +439,42 @@
       { prompt: 'Cuando sonó el mensaje, yo ____ (esperar) diez minutos.', options: ['había esperado', 'esperé', 'esperaba'], correct: 0, tense: 'Pretérito Pluscuamperfecto', explanation: 'Действие ожидания предшествует моменту звука сообщения.' }
     ];
 
-    const totalToAsk = 60;
+    const vocabItems = [
+      { es: 'comprar', ru: 'покупать', hint: 'Я купил билеты.' },
+      { es: 'viajar', ru: 'путешествовать', hint: 'Мы часто viajamos.' },
+      { es: 'estudiar', ru: 'изучать', hint: 'Она estudió español.' },
+      { es: 'llamar', ru: 'звонить', hint: 'Он llamó por teléfono.' },
+      { es: 'hacer', ru: 'делать', hint: '¿Has hecho la tarea?' },
+      { es: 'vivir', ru: 'жить', hint: 'Vivían en Madrid.' },
+      { es: 'trabajar', ru: 'работать', hint: 'Trabajamos juntos.' },
+      { es: 'leer', ru: 'читать', hint: 'Leí un libro.' },
+      { es: 'cocinar', ru: 'готовить', hint: 'Cocinaba una sopa.' },
+      { es: 'esperar', ru: 'ждать', hint: 'Esperé cinco minutos.' },
+      { es: 'salir', ru: 'выходить', hint: 'Salimos temprano.' },
+      { es: 'llegar', ru: 'приходить', hint: 'Llegó tarde.' },
+      { es: 'preguntar', ru: 'спрашивать', hint: 'Pregunté dos veces.' },
+      { es: 'decidir', ru: 'решать', hint: 'Decidió aprender.' },
+      { es: 'aprender', ru: 'учиться', hint: 'Aprendimos mucho.' },
+      { es: 'encender', ru: 'включать', hint: 'Encendí la luz.' },
+      { es: 'preparar', ru: 'готовить', hint: 'Preparé un informe.' },
+      { es: 'abrir', ru: 'открывать', hint: 'Abrí la puerta.' },
+      { es: 'cerrar', ru: 'закрывать', hint: 'Ella cerró la tienda.' },
+      { es: 'escribir', ru: 'писать', hint: 'Escribí un correo.' },
+      { es: 'escuchar', ru: 'слушать', hint: 'Escuché música.' },
+      { es: 'mirar', ru: 'смотреть', hint: 'Miré una película.' },
+      { es: 'buscar', ru: 'искать', hint: 'Busqué las llaves.' },
+      { es: 'encontrar', ru: 'находить', hint: 'Encontró su coche.' },
+      { es: 'ayudar', ru: 'помогать', hint: '¿Puedes ayudar?' },
+      { es: 'conocer', ru: 'знакомиться', hint: 'Conocí a Marta.' },
+      { es: 'comprender', ru: 'понимать', hint: 'Comprenderás pronto.' },
+      { es: 'perder', ru: 'терять', hint: 'Perdió su mochila.' },
+      { es: 'ganar', ru: 'выигрывать', hint: 'Ganaron el partido.' },
+      { es: 'descansar', ru: 'отдыхать', hint: 'Descansamos el domingo.' },
+      { es: 'viajar', ru: 'путешествовать', hint: 'Вариант-2. Для тренировки слов выбираем уникальные синонимы.' }
+    ];
+
+    const totalToAskTenses = 60;
+    const totalToAskVocab = 20;
     const progress = document.getElementById('progress');
     const promptEl = document.getElementById('prompt');
     const answers = document.getElementById('answers');
@@ -417,6 +482,7 @@
     const nextBtn = document.getElementById('nextBtn');
     const restartBtn = document.getElementById('restartBtn');
     const oralModeCheckbox = document.getElementById('oralMode');
+    const modeSelect = document.getElementById('gameMode');
     const result = document.getElementById('result');
 
     const order = [];
@@ -424,6 +490,7 @@
     let score = 0;
     let answered = false;
     let oralMode = false;
+    let activeMode = 'tenses';
 
     function shuffle(array) {
       const copy = [...array];
@@ -432,6 +499,35 @@
         [copy[i], copy[j]] = [copy[j], copy[i]];
       }
       return copy;
+    }
+
+    function makeVocabQuestions() {
+      const uniqueWords = vocabItems.filter((item, idx, arr) => arr.findIndex(v => v.es === item.es) === idx);
+      const translated = uniqueWords.map(item => item.ru);
+      return uniqueWords.map((item, index) => {
+        const distractors = shuffle(translated.filter((_, i) => i !== index)).slice(0, 3);
+        const options = shuffle([item.ru, ...distractors]);
+        const correct = options.indexOf(item.ru);
+        return {
+          type: 'vocab',
+          prompt: `Что означает слово "${item.es}"? (подсказка: ${item.hint})`,
+          options,
+          correct,
+          answer: item.ru,
+          translation: item.ru,
+          explanation: `${item.es}: ${item.ru}`
+        };
+      });
+    }
+
+    const vocabQuestions = makeVocabQuestions();
+
+    function getActiveQuestions() {
+      return activeMode === 'tenses' ? tenseQuestions : vocabQuestions;
+    }
+
+    function getQuestionCount() {
+      return activeMode === 'tenses' ? Math.min(totalToAskTenses, tenseQuestions.length) : Math.min(totalToAskVocab, vocabQuestions.length);
     }
 
     function render() {
@@ -447,8 +543,9 @@
       feedback.className = 'feedback';
       result.style.display = 'none';
 
-      const q = questions[order[currentIndex]];
-      progress.textContent = `Вопрос ${currentIndex + 1} / ${total}`;
+      const currentSet = getActiveQuestions();
+      const q = currentSet[order[currentIndex]];
+      progress.textContent = `${activeMode === 'vocab' ? 'Слово' : 'Вопрос'} ${currentIndex + 1} / ${total}`;
       promptEl.textContent = q.prompt;
 
       answers.innerHTML = '';
@@ -466,17 +563,15 @@
       if (answered) return;
       answered = true;
 
-      const q = questions[order[currentIndex]];
+      const q = getActiveQuestions()[order[currentIndex]];
       const buttons = Array.from(answers.querySelectorAll('button'));
 
-      buttons.forEach((b, idx) => {
-        b.disabled = true;
-        if (idx === selected && selected === q.correct) {
-          b.classList.add('correct');
+      buttons.forEach((button, idx) => {
+        button.disabled = true;
+        if (idx === q.correct) {
+          button.classList.add('correct');
         } else if (idx === selected) {
-          b.classList.add('wrong');
-        } else if (!oralMode && idx === q.correct) {
-          b.classList.add('correct');
+          button.classList.add('wrong');
         }
       });
 
@@ -487,7 +582,11 @@
           feedback.textContent = '✅ Верно';
         } else {
           feedback.className = 'feedback good';
-          feedback.innerHTML = `✅ Верно: <strong>${q.options[q.correct]}</strong>. <strong>${q.tense}</strong>. ${q.explanation}`;
+          if (q.type === 'vocab') {
+            feedback.innerHTML = `✅ Верно. «${q.answer}»`;
+          } else {
+            feedback.innerHTML = `✅ Верно: <strong>${q.options[q.correct]}</strong>. <strong>${q.tense}</strong>. ${q.explanation}`;
+          }
         }
       } else if (oralMode) {
         feedback.className = 'feedback bad';
@@ -509,11 +608,17 @@
       const percent = Math.round((score / order.length) * 100);
       let msg = '';
       if (percent >= 85) {
-        msg = 'Отличный результат. Ты отлично различаешь разницу между временами.';
+        msg = activeMode === 'vocab'
+          ? 'Отличная память слов. Можно переходить к предложениям.'
+          : 'Отличный результат по временам.';
       } else if (percent >= 65) {
-        msg = 'Хороший результат. Повтори блок и повтори сигналы времени.';
+        msg = activeMode === 'vocab'
+          ? 'Неплохо. Повтори ошибки и повтори ещё раз.'
+          : 'Хороший результат. Повтори сигналы времени.';
       } else {
-        msg = 'Нужна ещё практика, особенно с контекстами «cuando», «ya», «antes de».';
+        msg = activeMode === 'vocab'
+          ? 'Нужен частый короткий повтор: 10–15 слов в день.'
+          : 'Нужна ещё практика, особенно с контекстами «cuando», «ya», «antes de».';
       }
 
       result.className = 'result good';
@@ -523,14 +628,23 @@
     }
 
     function start() {
-      const shuffled = shuffle([...Array(questions.length).keys()]);
-      const limit = Math.min(totalToAsk, questions.length);
+      const activeSet = getActiveQuestions();
+      const shuffled = shuffle([...Array(activeSet.length).keys()]);
+      const limit = getQuestionCount();
       order.length = 0;
       for (let i = 0; i < limit; i++) {
         order.push(shuffled[i]);
       }
       currentIndex = 0;
       score = 0;
+      result.style.display = 'none';
+      if (activeMode === 'vocab') {
+        oralModeCheckbox.disabled = true;
+        oralModeCheckbox.checked = false;
+        oralMode = false;
+      } else {
+        oralModeCheckbox.disabled = false;
+      }
       render();
     }
 
@@ -544,6 +658,11 @@
 
     oralModeCheckbox.addEventListener('change', () => {
       oralMode = oralModeCheckbox.checked;
+      start();
+    });
+
+    modeSelect.addEventListener('change', () => {
+      activeMode = modeSelect.value;
       start();
     });
 

@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Испанские прошедшие времена — практика</title>
+  <style>
+    :root {
+      --bg1: #0f172a;
+      --bg2: #1e293b;
+      --card: #ffffff;
+      --ink: #0f172a;
+      --muted: #475569;
+      --accent: #2563eb;
+      --good: #16a34a;
+      --bad: #dc2626;
+      --radius: 14px;
+      --shadow: 0 10px 30px rgba(2, 6, 23, .18);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+      min-height: 100vh;
+      color: var(--ink);
+      background: radial-gradient(1000px 600px at 15% -20%, #38bdf8 0%, transparent 60%),
+                  radial-gradient(700px 500px at 100% 0%, #a78bfa 0%, transparent 55%),
+                  linear-gradient(180deg, var(--bg1), var(--bg2));
+      display: flex;
+      justify-content: center;
+      padding: 20px 12px;
+    }
+
+    .app {
+      width: min(960px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 14px;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .title {
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .title p {
+      margin: 4px 0;
+      color: #dbeafe;
+      max-width: 680px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .time-card {
+      border: 1px solid #dbeafe;
+      border-radius: 12px;
+      padding: 12px;
+      background: #f8fafc;
+    }
+
+    .time-card h3 {
+      margin-bottom: 6px;
+      color: #1e3a8a;
+    }
+
+    .time-card p {
+      margin: 0;
+      color: #334155;
+    }
+
+    .panel {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .chip {
+      border: 1px solid #94a3b8;
+      color: #1e293b;
+      background: white;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 13px;
+    }
+
+    .question-box {
+      background: linear-gradient(180deg, #ffffff, #f1f5f9);
+      border-radius: var(--radius);
+      padding: 14px;
+      border: 1px solid #cbd5e1;
+    }
+
+    .prompt {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .options {
+      display: grid;
+      gap: 8px;
+    }
+
+    .option {
+      text-align: left;
+      border: 2px solid #cbd5e1;
+      background: #fff;
+      color: #0f172a;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 18px;
+      min-height: 56px;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: transform .06s ease, border-color .2s ease, background .2s ease;
+    }
+
+    .option:active { transform: scale(0.985); }
+    .option.correct { border-color: var(--good); background: #dcfce7; }
+    .option.wrong { border-color: var(--bad); background: #fee2e2; }
+
+    .feedback {
+      margin-top: 10px;
+      font-size: 15px;
+      color: #1e293b;
+      min-height: 52px;
+      border-radius: 10px;
+      padding: 10px;
+      background: #e2e8f0;
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 12px;
+      background: var(--accent);
+      color: white;
+      padding: 12px 14px;
+      font-size: 16px;
+      cursor: pointer;
+      flex: 1 1 auto;
+      min-width: 140px;
+      touch-action: manipulation;
+    }
+
+    .btn.secondary { background: #64748b; }
+
+    .status {
+      font-size: 14px;
+      color: #475569;
+      margin-bottom: 8px;
+    }
+
+    .result {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 600;
+      display: none;
+      background: #dbeafe;
+    }
+
+    .good { color: #14532d; background: #dcfce7; }
+    .bad { color: #7f1d1d; background: #fee2e2; }
+
+    details {
+      border: 1px solid #dbeafe;
+      border-radius: 10px;
+      padding: 10px;
+      background: #f8fafc;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: #1d4ed8;
+    }
+
+    ul { margin: 8px 0; padding-left: 18px; color: #334155; }
+
+    @media (max-width: 740px) {
+      .grid { grid-template-columns: 1fr; }
+      .prompt { font-size: 19px; }
+      .option { font-size: 17px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <div class="card title">
+      <div>
+        <h1>Испанские прошедшие времена</h1>
+        <p>Интерактив для телефона: выбирай форму глагола, видишь пояснение, почему это именно это время.</p>
+      </div>
+      <span class="muted">Открой файл в браузере телефона в полноэкранном режиме</span>
+    </div>
+
+    <section class="card">
+      <h2>Короткая шпаргалка</h2>
+      <div class="grid">
+        <div class="time-card">
+          <h3>Pretérito Indefinido</h3>
+          <p>Завершённое, одноразовое действие в прошлом в конкретный момент.</p>
+          <div class="row">
+            <span class="chip">ayer / anoche</span>
+            <span class="chip">el lunes pasado</span>
+            <span class="chip">en 2019</span>
+          </div>
+        </div>
+
+        <div class="time-card">
+          <h3>Pretérito Perfecto</h3>
+          <p>Прошлое с акцентом на результат/влияние на настоящий момент.</p>
+          <div class="row">
+            <span class="chip">ya</span>
+            <span class="chip">todavía no</span>
+            <span class="chip">este mes</span>
+          </div>
+        </div>
+
+        <div class="time-card">
+          <h3>Pretérito Imperfecto</h3>
+          <p>Повторяющиеся, длительные, фоновые действия в прошлом.</p>
+          <div class="row">
+            <span class="chip">cuando era niño/a</span>
+            <span class="chip">siempre</span>
+            <span class="chip">todos los días</span>
+          </div>
+        </div>
+
+        <div class="time-card">
+          <h3>Pluscuamperfecto</h3>
+          <p>Действие произошло раньше другого прошлого события.</p>
+          <div class="row">
+            <span class="chip">cuando llegué</span>
+            <span class="chip">antes de</span>
+            <span class="chip">había + participio</span>
+          </div>
+        </div>
+      </div>
+
+      <details style="margin-top: 12px;">
+        <summary>Как быстро определять время</summary>
+        <ul>
+          <li>Есть конкретная дата/момент → обычно <strong>Indefinido</strong>.</li>
+          <li>Есть фон, привычки, описание → <strong>Imperfecto</strong>.</li>
+          <li>Есть связь с «сейчас» (опыт, уже/всё ещё) → <strong>Perfecto</strong>.</li>
+          <li>Событие произошло до другого прошлого события → <strong>Pluscuamperfecto</strong>.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>Тренажёр</h2>
+      <div class="status" id="progress">Вопрос 1 / 12</div>
+
+      <div class="question-box">
+        <div class="prompt" id="prompt">Загрузка...</div>
+        <div id="answers" class="options"></div>
+        <div id="feedback" class="feedback"></div>
+      </div>
+
+      <div class="controls">
+        <button class="btn" id="nextBtn" disabled>Дальше</button>
+        <button class="btn secondary" id="restartBtn">Начать заново</button>
+      </div>
+
+      <div id="result" class="result"></div>
+    </section>
+
+    <section class="card">
+      <h2>Мини-напоминалка</h2>
+      <details>
+        <summary>Сколько раз встречаются временные сигналы</summary>
+        <ul>
+          <li>Indefinido: ayer, anoche, en 2010, la semana pasada</li>
+          <li>Imperfecto: siempre, de pequeño, mientras, cada día</li>
+          <li>Perfecto: ya, esta semana, esta mañana, todavía no</li>
+          <li>Pluscuamperfecto: antes de que, cuando ya había..., ya había + participio</li>
+        </ul>
+      </details>
+    </section>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        prompt: 'Ayer, yo ____ (visitar) a mis padres después del trabajo.',
+        options: ['visité', 'he visitado', 'visitaba'],
+        correct: 0,
+        tense: 'Pretérito Indefinido',
+        explanation: 'Ayer — конкретный момент в прошлом, действие завершено.'
+      },
+      {
+        prompt: 'Cuando era niña, ella ____ (leer) cuentos cada noche.',
+        options: ['leyó', 'ha leído', 'leía'],
+        correct: 2,
+        tense: 'Pretérito Imperfecto',
+        explanation: 'Повторяющееся действие на фоне прошлого → imperfecto.'
+      },
+      {
+        prompt: 'Este año ya ____ (viajar) a tres países.',
+        options: ['he viajado', 'viajé', 'viajaba'],
+        correct: 0,
+        tense: 'Pretérito Perfecto',
+        explanation: 'Эпоха «этого года» и итог важен сейчас.'
+      },
+      {
+        prompt: 'Cuando llegué al aeropuerto, yo ya ____ (comprar) mi billete.',
+        options: ['compré', 'he comprado', 'había comprado'],
+        correct: 2,
+        tense: 'Pretérito Pluscuamperfecto',
+        explanation: 'Сначала купила билет, потом приехала в аэропорт.'
+      },
+      {
+        prompt: 'En 2012 yo ____ (estudiar) ingeniería en la universidad.',
+        options: ['estudié', 'estudiaba', 'he estudiado'],
+        correct: 1,
+        tense: 'Pretérito Imperfecto',
+        explanation: 'Длительный процесс в прошлом без акцента на моменте завершения.'
+      },
+      {
+        prompt: 'A las ocho de la tarde, Pedro ____ (decir) “ya vuelvo”.',
+        options: ['dijo', 'decía', 'ha dicho'],
+        correct: 0,
+        tense: 'Pretérito Indefinido',
+        explanation: 'Конкретный разовый эпизод в истории.'
+      },
+      {
+        prompt: 'Nosotros ____ (vivir) en Madrid durante dos años.',
+        options: ['vivimos', 'vivíamos', 'hemos vivido'],
+        correct: 1,
+        tense: 'Pretérito Imperfecto',
+        explanation: 'Длительный фон в прошлом.'
+      },
+      {
+        prompt: 'Anoche no ____ (saber) qué había pasado.',
+        options: ['supe', 'sé', 'sabía'],
+        correct: 0,
+        tense: 'Pretérito Indefinido',
+        explanation: 'Прошедшее разовое событие: no supe = не узнала в тот вечер.'
+      },
+      {
+        prompt: 'Antes de la reunión, ella ____ (preparar) todos los documentos.',
+        options: ['preparó', 'preparaba', 'había preparado'],
+        correct: 2,
+        tense: 'Pretérito Pluscuamperfecto',
+        explanation: 'Подготовила документы до того, как началась встреча.'
+      },
+      {
+        prompt: 'Esta semana ya ____ (leer) tres artículos para la clase.',
+        options: ['he leído', 'leí', 'leía'],
+        correct: 0,
+        tense: 'Pretérito Perfecto',
+        explanation: 'Не просто прошлое, а опыт за актуальный временной отрезок.'
+      },
+      {
+        prompt: 'Cada domingo, mis amigos y yo ____ (jugar) al fútbol.',
+        options: ['jugábamos', 'jugamos', 'hemos jugado'],
+        correct: 0,
+        tense: 'Pretérito Imperfecto',
+        explanation: 'Повторяемое действие: каждый воскресный ритуал.'
+      },
+      {
+        prompt: '¿Tú ____ (hacer) la tarea anoche?',
+        options: ['hiciste', 'has hecho', 'habías hecho'],
+        correct: 0,
+        tense: 'Pretérito Indefinido',
+        explanation: 'Вопрос про конкретный прошлый вечер → indefinido.'
+      },
+      {
+        prompt: 'La lluvia empezó y yo ____ (cocinar) sopa.',
+        options: ['estuve cocinando', 'cocinaba', 'he estado cocinando'],
+        correct: 1,
+        tense: 'Pretérito Imperfecto',
+        explanation: '«La lluvia empezó y ...»: фон/действие в процессе → imperfecto.'
+      }
+    ];
+
+    const progress = document.getElementById('progress');
+    const promptEl = document.getElementById('prompt');
+    const answers = document.getElementById('answers');
+    const feedback = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const restartBtn = document.getElementById('restartBtn');
+    const result = document.getElementById('result');
+
+    const order = [];
+    let currentIndex = 0;
+    let score = 0;
+    let answered = false;
+
+    function shuffle(array) {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function render() {
+      const total = order.length;
+      if (currentIndex >= total) {
+        showResult();
+        return;
+      }
+
+      answered = false;
+      nextBtn.disabled = true;
+      feedback.textContent = '';
+      feedback.className = 'feedback';
+      result.style.display = 'none';
+
+      const q = questions[order[currentIndex]];
+      progress.textContent = `Вопрос ${currentIndex + 1} / ${total}`;
+      promptEl.textContent = q.prompt;
+
+      answers.innerHTML = '';
+      q.options.forEach((option, idx) => {
+        const b = document.createElement('button');
+        b.className = 'option';
+        b.type = 'button';
+        b.textContent = option;
+        b.addEventListener('click', () => check(idx));
+        answers.appendChild(b);
+      });
+    }
+
+    function check(selected) {
+      if (answered) return;
+      answered = true;
+
+      const q = questions[order[currentIndex]];
+      const buttons = Array.from(answers.querySelectorAll('button'));
+
+      buttons.forEach((b, idx) => {
+        b.disabled = true;
+        if (idx === q.correct) {
+          b.classList.add('correct');
+        } else if (idx === selected) {
+          b.classList.add('wrong');
+        }
+      });
+
+      if (selected === q.correct) {
+        score += 1;
+        feedback.className = 'feedback good';
+        feedback.innerHTML = `✅ Верно: ${q.options[q.correct]}. <strong>${q.tense}</strong>. ${q.explanation}`;
+      } else {
+        feedback.className = 'feedback bad';
+        feedback.innerHTML = `❌ Почти: правильный вариант <strong>${q.options[q.correct]}</strong>. ${q.explanation}`;
+      }
+
+      nextBtn.disabled = false;
+    }
+
+    function showResult() {
+      promptEl.textContent = 'Тренировка завершена 🎉';
+      progress.textContent = `Результат: ${score} из ${order.length}`;
+      answers.innerHTML = '';
+      feedback.textContent = '';
+
+      const percent = Math.round((score / order.length) * 100);
+      let msg = '';
+      if (percent >= 85) {
+        msg = 'Отличный результат. Отлично чувствуешь разницу между историями и фоном.';
+      } else if (percent >= 65) {
+        msg = 'Хороший результат. Повтори 2–3 раза, фокус на сигналы времени.';
+      } else {
+        msg = 'Возьми паузу и снова пройди блок: сначала читай слова-сигналы (ayer, siempre, cuando...).';
+      }
+
+      result.className = 'result good';
+      result.style.display = 'block';
+      result.textContent = `Набрано: ${score}/${order.length} (${percent}%). ${msg}`;
+      nextBtn.disabled = true;
+    }
+
+    function start() {
+      for (let i = 0; i < questions.length; i++) order[i] = i;
+      for (let i = order.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [order[i], order[j]] = [order[j], order[i]];
+      }
+      currentIndex = 0;
+      score = 0;
+      render();
+    }
+
+    nextBtn.addEventListener('click', () => {
+      if (!answered) return;
+      currentIndex++;
+      render();
+    });
+
+    restartBtn.addEventListener('click', start);
+
+    start();
+  </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title>DELE A2 App</title>
+  <desc>Иконка приложения</desc>
+  <rect width="512" height="512" rx="88" fill="#1e5f48" />
+  <path d="M85 192h342v128H192l-21 64H85V192z" fill="#fffdf8"/>
+  <rect x="117" y="344" width="278" height="36" rx="18" fill="#d5a64e"/>
+  <circle cx="170" cy="149" r="32" fill="#d8644d"/>
+  <circle cx="266" cy="149" r="32" fill="#d8644d"/>
+  <circle cx="362" cy="149" r="32" fill="#d8644d"/>
+  <text x="256" y="458" text-anchor="middle" font-family="Arial, sans-serif" font-size="66" fill="#fffdf8" font-weight="700">DELE</text>
+</svg>

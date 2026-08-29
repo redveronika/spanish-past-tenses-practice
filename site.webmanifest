@@ -1,0 +1,23 @@
+{
+  "name": "DELE A2 — Практика прошедших времен",
+  "short_name": "DELE Tenses",
+  "description": "Интерактивная тренировка испанских прошедших времен и нового словаря.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f0e6",
+  "theme_color": "#1e5f48",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}

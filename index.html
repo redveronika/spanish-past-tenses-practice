@@ -3,6 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Интерактивная тренировка прошедших времен испанского: выбор формы, объяснение и режим изучения слов." />
+  <meta name="theme-color" content="#1e5f48" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="manifest" href="site.webmanifest" />
+  <link rel="icon" type="image/svg+xml" href="icon-192.svg" />
   <title>Испанские прошедшие времена — практика</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
@@ -561,6 +567,12 @@
   </main>
 
   <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+
     const tenseQuestions = [
       { prompt: 'Ayer, yo ____ (visitar) a mis padres después del trabajo.', options: ['visité', 'he visitado', 'visitaba'], correct: 0, tense: 'Pretérito Indefinido', explanation: 'Ayer — конкретный момент в прошлом, действие завершено.' },
       { prompt: 'Anoche, Pedro ____ (comprar) pan para la cena.', options: ['compró', 'compraba', 'ha comprado'], correct: 0, tense: 'Pretérito Indefinido', explanation: 'Anoche указывает на конкретное действие в конкретный вечер.' },
